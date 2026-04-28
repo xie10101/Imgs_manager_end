@@ -10,10 +10,13 @@ import {
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-
+import { UserService } from '../user/user.service';
 @Controller('post')
 export class PostController {
-  constructor(private readonly postService: PostService) {}
+  constructor(
+    private readonly postService: PostService,
+    private readonly userService: UserService,
+  ) {}
 
   @Post()
   create(@Body() createPostDto: CreatePostDto) {
@@ -22,6 +25,7 @@ export class PostController {
 
   @Get()
   findAll() {
+    console.log(this.userService.findOne(1));
     return this.postService.findAll();
   }
 

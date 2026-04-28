@@ -4,7 +4,6 @@ import { Post } from './entities/post.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
 @Injectable()
 export class PostService {
   // 数据 业务 交互层
@@ -42,7 +41,3 @@ export class PostService {
     console.log('应用已启动，可以处理请求');
   }
 }
-
-/**
- *
- */
