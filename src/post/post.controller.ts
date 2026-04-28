@@ -25,7 +25,6 @@ export class PostController {
 
   @Get()
   findAll() {
-    console.log(this.userService.findOne(1));
     return this.postService.findAll();
   }
 

@@ -1,24 +1,32 @@
 import { Injectable } from '@nestjs/common';
-// import { CreateUserDto } from './dto/create-user.dto';
-// import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { UserRole } from './entities/user.entity';
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly repo: Repository<User>,
   ) {}
-  // create(createUserDto: CreateUserDto) {
-  //   return 'This action adds a new user';
-  // }
-
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOneByUserName(username: string) {
+    return this.repo.findOneBy({ username });
+  }
+  createUser(user: Partial<User>) {
+    // 类型补充 :
+    const userObj = this.repo.create(user);
+    return this.repo.save(userObj);
   }
 
-  // update(id: number, updateUserDto: UpdateUserDto) {
-  //   return `This action updates a #${id} user`;
-  // }
+  async onModuleInit() {
+    await this.createUser({
+      username: 'admin',
+      password: '123456',
+      nickname: 'admin',
+      email: 'xxx@qq.com',
+      phone: '12345678910',
+      role: UserRole.ADMIN,
+      status: 1,
+    });
+  }
 }
