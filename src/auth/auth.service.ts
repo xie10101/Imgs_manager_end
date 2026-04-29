@@ -10,20 +10,24 @@ export class AuthService {
      * 具体的逻辑操作 ：
      * 1. 根据用户名查询用户信息
      * 2. 验证密码
-     * 3. 返回用户信息 + jwt
+     * 3. 返回用户信息 -- token：xx
      */
     const user = await this.userService.findOneByUserName(username);
     if (user) {
       //实际操作:提取其中hash的盐并和当前password生成hash
       const isMatch = await bcrypt.compare(password, user.password);
       if (isMatch) {
-        // 返回数据是应该包含用户信息（排除敏感信息） + jwt
+        this.logger.log('用户名密码认证成功');
+        // 返回数据是应该包含用户信息（排除敏感信息）
         /**
          *
          */
-        return user;
+        const { password, ...res } = user;
+        return res;
       }
+      this.logger.log('密码错误');
     }
+    this.logger.log('用户名不存在');
     // 验证失败需要返回错误提示 - 用户名或密码错误
     return null;
   }
