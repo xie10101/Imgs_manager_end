@@ -9,13 +9,19 @@ export class UserService {
     @InjectRepository(User)
     private readonly repo: Repository<User>,
   ) {}
+  // 根据用户名查询用户信息
   findOneByUserName(username: string) {
     return this.repo.findOneBy({ username });
   }
-  createUser(user: Partial<User>) {
-    // 类型补充 :
+
+  // 根据邮箱查询用户信息
+  indOneByEmail(email: string) {
+    return this.repo.findOneBy({ email });
+  }
+  // 创建用户
+  async createUser(user: Partial<User>) {
     const userObj = this.repo.create(user);
-    return this.repo.save(userObj);
+    return await this.repo.save(userObj);
   }
 
   async onModuleInit() {

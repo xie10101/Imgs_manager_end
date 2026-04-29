@@ -20,8 +20,9 @@ async function bootstrap() {
 
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // 剥离非 DTO 定义的属性
-      transform: true, // 自动类型转换
+      whitelist: true, // 自动过滤 DTO 未定义的字段
+      forbidNonWhitelisted: true, // 传多余字段直接报错
+      transform: true, // 自动把普通对象转为 DTO 类实例
     }),
   );
 
