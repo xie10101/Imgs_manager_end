@@ -14,9 +14,9 @@ export class localStrategyService extends PassportStrategy(Strategy, 'local') {
       passwordField: 'password',
     });
   }
-  // 校验回调：email + password → 返回用户（挂到 req.user）
-  async validate(email: string, password: string) {
-    const user = await this.authService.validateUser(email, password);
+  // 校验回调：username + password → 返回用户（挂到 req.user）
+  async validate(username: string, password: string) {
+    const user = await this.authService.validateUser(username, password);
     if (!user) {
       // 抛出 401 错误，Nest 会自动将其转换为规范的 JSON 响应
       throw new UnauthorizedException('账号或密码错误');

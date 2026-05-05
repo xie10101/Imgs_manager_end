@@ -1,7 +1,6 @@
 import { Body, Post, Controller, Req, Get, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
-import { LoginDto } from './dto/login.dto';
 import { LocalAuthGuard } from './guard/local.guard';
 import { JwtAuthGuard } from './guard/jwt.guard';
 @Controller('auth')
@@ -26,6 +25,7 @@ export class AuthController {
   @Get('/info')
   @UseGuards(JwtAuthGuard)
   info(@Req() req: any) {
-    console.log(req);
+    console.log(req.user);
+    return req.user;
   }
 }

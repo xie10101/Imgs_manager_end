@@ -19,10 +19,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'customJwt') {
   async validate(payload: any) {
     // payload 是 JWT 解码后的内容（如 { sub: userId, email: '...' }）
     const { sub: id } = payload;
-    console.log(payload);
     // 1. 查找用户
     const user = await this.userService.findOne(id);
-
+    console.log(user);
     // 2. 校验用户是否存在
     if (!user) {
       throw new UnauthorizedException('用户不存在或已过期');

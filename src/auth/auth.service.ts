@@ -1,4 +1,12 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  UnauthorizedException,
+  ConflictException,
+  InternalServerErrorException,
+} from '@nestjs/common';
+
+import {} from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -50,27 +58,39 @@ export class AuthService {
    * 注册逻辑
    */
   async register(username: string, password: string, email: string) {
-    // 1.判断username是否重复 ;
-    // 2.保存用户信息 -- 处理密码 、create 用户元组
+    // 1. 检查用户名是否已存在
     const user = await this.userService.findOneByUserName(username);
-    const emailUser = await this.userService.indOneByEmail(email);
-    if (user || emailUser) {
-      // 返回错误提示 - 该用户或邮箱已经存在
-      return null;
+    if (user) {
+      throw new ConflictException('该用户名已被占用');
     }
-    const salt = await bcrypt.genSalt();
-    const hash = await bcrypt.hash(password, salt);
-    // 返回promise对象 -- 进行 try catch 处理
+
+    // 2. 检查邮箱是否已存在
+    const emailUser = await this.userService.indOneByEmail(email);
+    if (emailUser) {
+      throw new ConflictException('该邮箱已被注册');
+    }
+
+    // 3. 密码加密
     try {
-      const user = await this.userService.createUser({
+      const salt = await bcrypt.genSalt(10);
+
+      const hash = await bcrypt.hash(password, salt);
+      // 4. 执行创建操作
+      const newUser = await this.userService.createUser({
         username,
         password: hash,
         email,
       });
-      return user;
+
+      this.logger.log(`新用户注册成功: ${username}`);
+
+      // 返回脱敏后的用户信息
+      const { password: _, ...result } = newUser;
+      return result;
     } catch (error) {
-      console.log(error);
-      return null;
+      this.logger.error(`注册过程中发生异常: ${error.message}`, error.stack);
+      // 如果是数据库或其他未知错误，抛出 500 异常
+      throw new InternalServerErrorException('注册失败，请稍后再试');
     }
   }
 }
