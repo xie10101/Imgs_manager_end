@@ -2,7 +2,7 @@ import { Body, Post, Controller, Req, Get, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
-import { LocalAuthGuard } from './guard/local.auth.guard';
+import { LocalAuthGuard } from './guard/local.guard';
 import { JwtAuthGuard } from './guard/jwt.guard';
 @Controller('auth')
 export class AuthController {
@@ -18,10 +18,9 @@ export class AuthController {
   //根据数据库统一设置接口文档- 参数字段保证
   @Post('/login')
   @UseGuards(LocalAuthGuard) //直接做策略处理 -- 策略处理优势 ？
-  async login(@Body() body: LoginDto) {
+  login(@Req() req: any) {
     // 此处重新设置
-    const { username, password } = body;
-    return await this.authService.validateUser(username, password);
+    return this.authService.login(req.user);
   }
 
   @Get('/info')

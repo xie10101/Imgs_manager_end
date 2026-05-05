@@ -9,9 +9,18 @@ export class UserService {
     @InjectRepository(User)
     private readonly repo: Repository<User>,
   ) {}
+  //查询所有用户
+  findAll() {
+    return this.repo.find();
+  }
   // 根据用户名查询用户信息
   findOneByUserName(username: string) {
     return this.repo.findOneBy({ username });
+  }
+
+  // 根据 ID 查询
+  findOne(id: number) {
+    return this.repo.findOneBy({ id });
   }
 
   // 根据邮箱查询用户信息
@@ -25,14 +34,7 @@ export class UserService {
   }
 
   async onModuleInit() {
-    await this.createUser({
-      username: 'admin',
-      password: '123456',
-      nickname: 'admin',
-      email: 'xxx@qq.com',
-      phone: '12345678910',
-      role: UserRole.ADMIN,
-      status: 1,
-    });
+    const users = await this.findAll();
+    console.log(users);
   }
 }
