@@ -1,8 +1,16 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // 统一响应格式
+  app.useGlobalInterceptors(new TransformInterceptor(new Reflector()));
+  // 统一异常处理
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   // 配置 请求方法类型限制 , 域名白名单 , 允许携带 Cookie
   app.enableCors({
@@ -10,7 +18,7 @@ async function bootstrap() {
     origin: [
       // 包含的是跨域URL- 请求从何来
       'http://localhost:3000',
-      'http://localhost:8080',
+      'http://localhost:5173',
       'http://your-production-domain.com', // 替换为你的生产域名
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',

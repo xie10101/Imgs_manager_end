@@ -24,14 +24,12 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'customJwt') {
     console.log(user);
     // 2. 校验用户是否存在
     if (!user) {
-      throw new UnauthorizedException('用户不存在或已过期');
+      throw new UnauthorizedException('用户不存在或已过期'); //401
     }
-
     // 3. 校验用户状态（如是否被禁用）
     if (user.status === 0) {
       throw new UnauthorizedException('账号已被禁用，请联系管理员');
     }
-
     // 4. 返回对象会被挂载到 req.user
     const { password, ...result } = user;
     return result;

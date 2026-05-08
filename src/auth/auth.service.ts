@@ -28,14 +28,14 @@ export class AuthService {
     const user = await this.userService.findOneByUserName(username);
     if (!user) {
       this.logger.warn('登录失败：用户名不存在');
-      throw new UnauthorizedException('用户名或密码错误');
+      throw new InternalServerErrorException('用户名不存在');
     }
 
     //实际操作:提取其中hash的盐并和当前password生成hash
     const isMatch = await bcrypt.compare(password, user.password); //此步处理的问题
     if (!isMatch) {
       this.logger.warn('登录失败：密码错误');
-      throw new UnauthorizedException('用户名或密码错误');
+      throw new InternalServerErrorException('密码错误');
     }
 
     this.logger.log(`用户【${username}】登录成功`);
