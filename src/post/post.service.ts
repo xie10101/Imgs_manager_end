@@ -14,7 +14,7 @@ export class PostService {
   ) {}
 
   create(createPostDto: CreatePostDto) {
-    return 'This action adds a new post';
+    return this.repo.save(createPostDto);
   }
 
   findAll() {
@@ -26,11 +26,11 @@ export class PostService {
   }
 
   update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+    return this.repo.update(id, updatePostDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} post`;
+    return this.repo.delete(id);
   }
 
   // 多个生命周期钩子的执行

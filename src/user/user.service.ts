@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserRole } from './entities/user.entity';
+import { CreateUserDto } from './dto/create-user.dto';
 @Injectable()
 export class UserService {
   constructor(
@@ -28,13 +28,10 @@ export class UserService {
     return this.repo.findOneBy({ email });
   }
   // 创建用户
-  async createUser(user: Partial<User>) {
+  async createUser(user: CreateUserDto) {
     const userObj = this.repo.create(user);
     return await this.repo.save(userObj);
   }
 
-  async onModuleInit() {
-    const users = await this.findAll();
-    console.log(users);
-  }
+  async onModuleInit() {}
 }

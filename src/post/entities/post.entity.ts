@@ -4,7 +4,11 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+
+import { Category } from '../../category/entities/category.entity';
 
 //  状态枚举值
 export enum PostStatus {
@@ -32,10 +36,11 @@ export class Post {
   @Column({ length: 255, nullable: true })
   cover: string;
   // 枚举类型 -- 不能为空（表单提交注意不能为空）
-  @Column({
-    name: 'category_id',
-  })
-  categoryId: number;
+
+  @ManyToOne(() => Category, (category) => category.posts)
+  @JoinColumn({ name: 'categoryId' }) // 绑定外键字段名
+  category: Category;
+
   // 枚举类型 -- 默认值
   @Column({
     type: 'enum',

@@ -7,7 +7,6 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ExceptionResponse } from '../../errors/exception.type';
-import { ConnectionPoolClosedEvent } from 'typeorm';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
